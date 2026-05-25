@@ -7,13 +7,45 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-# Configurazione pagina
-st.set_page_config(page_title="Running app - Zona 2", layout="centered")
+import streamlit as st
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import pandas as pd
 
-st.title("🏃‍♂️ Running App — Test Progressi Zona 2")
-st.write("Monitora i procesi di allenamento")
+# 1. Configurazione Google Sheets
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+creds_dict = dict(st.secrets["gcp_service_account"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+client = gspread.authorize(creds)
 
+# Apri il tuo foglio (sostituisci con il nome corretto del tuo file)
+sheet = client.open("Diario_Running_Multi")
 
+# 2. Scelta utente
+utente = st.selectbox("Chi sta correndo oggi?", ["Nino", "Fratello"])
+worksheet = sheet.worksheet(utente)
+
+# 3. Leggi i dati
+data = worksheet.get_all_records()
+df = pd.DataFrame(data)
+
+st.title(f"Diario di {utente}")
+st.table(df)
+
+# 4. Form di inserimento
+with st.form("nuova_corsa"):
+    data_corsa = st.date_input("Data")
+    km = st.number_input("Km")
+    tempo = st.text_input("Tempo (es. 45:00)")
+    note = st.text_input("Note")
+    submit = st.form_submit_button("Salva Corsa")
+
+    if submit:
+        # Aggiunge la riga su Google Sheets
+        worksheet.append_row([str(data_corsa), km, tempo, note])
+        st.success("Corsa salvata!")
+        st.rerun()
+        
 import os
 from dotenv import load_dotenv
 

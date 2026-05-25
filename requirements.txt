@@ -3,3 +3,5 @@ python-dotenv
 groq
 pandas
 plotly
+gspread
+oauth2client

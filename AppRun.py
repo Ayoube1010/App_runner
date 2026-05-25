@@ -18,7 +18,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-Chiave = os.getenv("GROQ_API_KEY")
+Chiave = st.secrets.get("GROQ_API_KEY") or os.environ.get("GROQ_API_KEY")
+
 NOME_DATABASE = "diario_running.csv"
 
 

@@ -19,10 +19,10 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 # Apri il tuo foglio (sostituisci con il nome corretto del tuo file)
-sheet = client.open("Diario_Running_Multi")
+sheet = client.open("1khkuxiRmUR8KFsS0Bx2oDfYNlP411j95eu9jKVSd-Mw")
 
 # 2. Scelta utente
-utente = st.selectbox("Chi sta correndo oggi?", ["Nino", "Fratello"])
+utente = st.selectbox("Chi sta correndo oggi?", ["Ayoube", "Mehdi"])
 worksheet = sheet.worksheet(utente)
 
 # 3. Leggi i dati
